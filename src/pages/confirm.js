@@ -12,7 +12,7 @@ const confirm = () => {
         console.log(data);
       });
   };
-
+  // testing main branch
   useEffect(() => {
     getCoordinates()
   },[]) 
