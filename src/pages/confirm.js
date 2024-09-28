@@ -12,8 +12,7 @@ const confirm = () => {
         console.log(data);
       });
   };
-  //added comment here to test git desktop
-  //testing git desktop
+
   useEffect(() => {
     getCoordinates()
   },[]) 
