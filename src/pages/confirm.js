@@ -8,7 +8,7 @@ const Confirm = () => {
   const [dropoffCoordinates, setDropoffCoordinates] = useState();
 
   const getPickupCoordinates = () => {
-    const pickup = "Borella";
+    const pickup = "Borella, Sri Lanka";
     fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${pickup}.json?` +
         new URLSearchParams({
@@ -24,7 +24,7 @@ const Confirm = () => {
   };
 
   const getDropoffCoordinates = () => {
-    const dropoff = "Slave Island";
+    const dropoff = "Colombo";
     fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${dropoff}.json?` +
         new URLSearchParams({
@@ -47,19 +47,20 @@ const Confirm = () => {
   }, []);
 
 
-  console.log(pickupCoordinates);
-  console.log(dropoffCoordinates);
-
   return (
     <Wrapper>
       {/* Map  */}
 
-      <Map />
+      <Map 
+          
+          pickupCoordinates = {pickupCoordinates}
+          dropoffCoordinates = {dropoffCoordinates}
+      />
 
       {/* Ride Container */}
 
       <RiderContainer>
-        {/* Rider Selector */}
+        {/* Rider Selector */}  
 
 
         {/* Confirm Button */}
