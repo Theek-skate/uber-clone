@@ -1,20 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import tw from "tailwind-styled-components";
 import { carList } from "../data/carList";
 
-const RideSelector = () => {
+const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
+  const [rideDuration, setRideDuration] = useState(0);
+
+  //   Get ride duration from mapbox api
+
+  //   useEffect(() => {
+  // template literal backticks
+
+  //     fetch(
+  //       `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]}, ${pickupCoordinates[1]}; ${dropoffCoordinates[0]}, ${dropoffCoordinates[1]}?access_token=pk.eyJ1IjoidGhlZWtza2F0ZSIsImEiOiJjbTFkNGUyNDcyamZyMm1wemZ2dmh3NHhvIn0.iO_Lg1G4FdNJE7mAbyUp-w`
+  //     )
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setRideDuration(data.routes[0].duration / 100);
+  //       });
+  //   }, [pickupCoordinates, dropoffCoordinates]);
+
+  useEffect(() => {
+    const fetchRideDuration = async () => {
+      try {
+        const response = await fetch(
+          `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoordinates[0]},${pickupCoordinates[1]};${dropoffCoordinates[0]},${dropoffCoordinates[1]}?access_token=pk.eyJ1IjoidGhlZWtza2F0ZSIsImEiOiJjbTFkNGUyNDcyamZyMm1wemZ2dmh3NHhvIn0.iO_Lg1G4FdNJE7mAbyUp-w`
+        );
+        const data = await response.json();
+
+        if (data.routes && data.routes.length > 0) {
+          setRideDuration(data.routes[0].duration / 250); 
+        } else {
+          console.error("No routes found in response:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching ride duration:", error);
+      }
+    };
+
+    if (pickupCoordinates && dropoffCoordinates) {
+      fetchRideDuration();
+    }
+  }, [pickupCoordinates, dropoffCoordinates]);
+
   return (
     <Wrapper>
       <Title>Choose a ride, or swipe up for more</Title>
       <CarList>
         {carList.map((car, index) => (
           <Car key={index}>
-            <CarImage src= {car.imgUrl} />
+            <CarImage src={car.imgUrl} />
             <CarDetails>
               <Service> {car.service}</Service>
               <Time> 5 min away </Time>
             </CarDetails>
-            <Price>  {`$`+ Math.round(13* car.multiplier)} </Price>
+            <Price> {"$" + (rideDuration * car.multiplier).toFixed(2)} </Price>
           </Car>
         ))}
       </CarList>
