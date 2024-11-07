@@ -28,7 +28,9 @@ const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
         const data = await response.json();
 
         if (data.routes && data.routes.length > 0) {
-          setRideDuration(data.routes[0].duration / 250); 
+          // 2.5 is a random number used to match the fare in rupees
+
+          setRideDuration(data.routes[0].duration / 2.5); 
         } else {
           console.error("No routes found in response:", data);
         }
@@ -53,7 +55,7 @@ const RideSelector = ({ pickupCoordinates, dropoffCoordinates }) => {
               <Service> {car.service}</Service>
               <Time> 5 min away </Time>
             </CarDetails>
-            <Price> {"$" + (rideDuration * car.multiplier).toFixed(2)} </Price>
+            <Price> { (rideDuration * car.multiplier).toFixed(2) + " Rs"} </Price>
           </Car>
         ))}
       </CarList>

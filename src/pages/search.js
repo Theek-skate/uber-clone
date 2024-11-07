@@ -55,7 +55,7 @@ const Search = () => {
           pathname: "/confirm",
           query: {
             pickup: pickup,
-            dropoff: dropoff,
+            dropoff: dropoff
           },
         }}
       >
