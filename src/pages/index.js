@@ -1,10 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import localFont from "next/font/local";
 import "tailwindcss/tailwind.css";
 import tw from "tailwind-styled-components";
 import Map from "./components/map";
 import Link from "next/link";
+import { auth } from "../../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "next/router";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,6 +21,23 @@ const geistMono = localFont({
 });
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser({
+          name: user.displayName,
+          photo: user.photoURL,
+        });
+      } else {
+        setUser(null);
+        router.push("/login");
+      }
+    });
+  }, []);
+
   return (
     <Wrapper>
       <Map />
@@ -27,8 +47,11 @@ export default function Home() {
         <Header>
           <UberLogo src="https://i.ibb.co/84stgjq/uber-technologies-new-20218114.jpg" />
           <Profile>
-            <Name>Atheek Nazeer </Name>
-            <UserImage src="https://media.licdn.com/dms/image/v2/C4D03AQFd7Q4KIIqxyA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1619523294597?e=1732752000&v=beta&t=ThFbMmjoa4H9Eup4CnA1Szzc4bF0nBojr4fxod-rJsc" />
+            <Name> {user && user.name}</Name>
+            <UserImage
+              src={user && user.photoUrl}
+              onClick={() => signOut(auth)}
+            />
           </Profile>
         </Header>
 
@@ -95,7 +118,7 @@ mr-4 w-20 text-black text-sm
 `;
 
 const UserImage = tw.img`
- h-12 w-12 rounded-full border-gray-200 p-px 
+ h-12 w-12 rounded-full border-gray-200 p-px cursor-pointer
 `;
 
 const ActionButtons = tw.div`
